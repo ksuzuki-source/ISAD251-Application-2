@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ISAD251WebApp.Models;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace ISAD251WebApp.Controllers
 {
@@ -23,7 +27,12 @@ namespace ISAD251WebApp.Controllers
         {
             var storedContext = _context.OrderDetails.Include(o => o.Product);
             return View(await storedContext.ToListAsync());
+
+
+
         }
+
+
 
         // GET: OrderDetails/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -62,64 +71,14 @@ namespace ISAD251WebApp.Controllers
             {
                 _context.Add(orderDetails);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new {id = orderDetails.OrderId });
             }
             ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductDetails", orderDetails.ProductId);
             return View(orderDetails);
         }
 
-        // GET: OrderDetails/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var orderDetails = await _context.OrderDetails.FindAsync(id);
-            if (orderDetails == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductDetails", orderDetails.ProductId);
-            return View(orderDetails);
-        }
 
-        // POST: OrderDetails/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,Quantity,Date")] OrderDetails orderDetails)
-        {
-            if (id != orderDetails.OrderId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(orderDetails);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderDetailsExists(orderDetails.OrderId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductDetails", orderDetails.ProductId);
-            return View(orderDetails);
-        }
 
         // GET: OrderDetails/Delete/5
         public async Task<IActionResult> Delete(int? id)

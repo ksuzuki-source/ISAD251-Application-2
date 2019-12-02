@@ -21,12 +21,13 @@ namespace ISAD251WebApp.Controllers
         // GET: OrderDetails1
             public async Task<IActionResult> Index(string searchString)
             {
+                var storedContext = _context.OrderDetails.Include(o => o.Product);
                 var Id = from i in _context.OrderDetails
                              select i;
 
                 if (!String.IsNullOrEmpty(searchString))
                 {
-                    Id = Id.Where(o => o.OrderId.Contains(searchString));
+                    Id = Id.Where(m  => m.OrderId == (searchString));
                 }
 
                 return View(await storedContext.ToListAsync());

@@ -56,7 +56,7 @@ namespace ISAD251WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,ProductId,Quantity")] OrderDetails orderDetails)
+        public async Task<IActionResult> Create([Bind("OrderId,ProductId,Quantity,Date")] OrderDetails orderDetails)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace ISAD251WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,Quantity")] OrderDetails orderDetails)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,Quantity,Date")] OrderDetails orderDetails)
         {
             if (id != orderDetails.OrderId)
             {

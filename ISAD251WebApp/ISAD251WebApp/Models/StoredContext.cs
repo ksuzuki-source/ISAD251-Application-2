@@ -20,8 +20,6 @@ namespace ISAD251WebApp.Models
         : base(options)
         { }
 
-        public virtual DbSet<Orders> Orders { get; set; }
-
         public virtual DbSet<OrderDetails> OrderDetails { get; set; }
         public virtual DbSet<Products> Products { get; set; }
 
@@ -37,7 +35,8 @@ namespace ISAD251WebApp.Models
 
             modelBuilder.Entity<OrderDetails>(entity =>
             {
-                entity.HasKey(e => new { e.OrderId, e.ProductId });
+                entity.HasKey(e => e.OrderId)
+                    .HasName("PK_OrderDetails");
 
 
                 entity.HasOne(d => d.Product)
@@ -47,16 +46,6 @@ namespace ISAD251WebApp.Models
                     .HasConstraintName("FK_Products");
             });
 
-            modelBuilder.Entity<Orders>(entity =>
-            {
-                entity.HasKey(e => e.OrderId)
-                    .HasName("PK_Orders");
-
-                entity.Property(e => e.OrderId).ValueGeneratedNever();
-
-                entity.Property(e => e.OrderDate).HasColumnType("date");
-
-            });
 
             modelBuilder.Entity<Products>(entity =>
             {

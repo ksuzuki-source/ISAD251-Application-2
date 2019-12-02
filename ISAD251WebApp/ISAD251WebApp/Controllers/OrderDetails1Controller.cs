@@ -9,22 +9,31 @@ using ISAD251WebApp.Models;
 
 namespace ISAD251WebApp.Controllers
 {
-    public class OrdersController : Controller
+    public class OrderDetails1Controller : Controller
     {
         private readonly StoredContext _context;
 
-        public OrdersController(StoredContext context)
+        public OrderDetails1Controller(StoredContext context)
         {
             _context = context;
         }
 
-        // GET: Orders
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Orders.ToListAsync());
-        }
+        // GET: OrderDetails1
+            public async Task<IActionResult> Index(string searchString)
+            {
+                var Id = from i in _context.OrderDetails
+                             select i;
 
-        // GET: Orders/Details/5
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    Id = Id.Where(o => o.OrderId.Contains(searchString));
+                }
+
+                return View(await storedContext.ToListAsync());
+            }
+        
+
+        // GET: OrderDetails1/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +41,42 @@ namespace ISAD251WebApp.Controllers
                 return NotFound();
             }
 
-            var orders = await _context.Orders
+            var orderDetails = await _context.OrderDetails
+                .Include(o => o.Product)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (orders == null)
+            if (orderDetails == null)
             {
                 return NotFound();
             }
 
-            return View(orders);
+            return View(orderDetails);
         }
 
-        // GET: Orders/Create
+        // GET: OrderDetails1/Create
         public IActionResult Create()
         {
+            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductDetails");
             return View();
         }
 
-        // POST: Orders/Create
+        // POST: OrderDetails1/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,OrderDate")] Orders orders)
+        public async Task<IActionResult> Create([Bind("OrderId,ProductId,Quantity,Date")] OrderDetails orderDetails)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(orders);
+                _context.Add(orderDetails);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(orders);
+            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductDetails", orderDetails.ProductId);
+            return View(orderDetails);
         }
 
-        // GET: Orders/Edit/5
+        // GET: OrderDetails1/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +84,23 @@ namespace ISAD251WebApp.Controllers
                 return NotFound();
             }
 
-            var orders = await _context.Orders.FindAsync(id);
-            if (orders == null)
+            var orderDetails = await _context.OrderDetails.FindAsync(id);
+            if (orderDetails == null)
             {
                 return NotFound();
             }
-            return View(orders);
+            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductDetails", orderDetails.ProductId);
+            return View(orderDetails);
         }
 
-        // POST: Orders/Edit/5
+        // POST: OrderDetails1/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderDate")] Orders orders)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,Quantity,Date")] OrderDetails orderDetails)
         {
-            if (id != orders.OrderId)
+            if (id != orderDetails.OrderId)
             {
                 return NotFound();
             }
@@ -96,12 +109,12 @@ namespace ISAD251WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(orders);
+                    _context.Update(orderDetails);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrdersExists(orders.OrderId))
+                    if (!OrderDetailsExists(orderDetails.OrderId))
                     {
                         return NotFound();
                     }
@@ -112,10 +125,11 @@ namespace ISAD251WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(orders);
+            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductDetails", orderDetails.ProductId);
+            return View(orderDetails);
         }
 
-        // GET: Orders/Delete/5
+        // GET: OrderDetails1/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,30 +137,31 @@ namespace ISAD251WebApp.Controllers
                 return NotFound();
             }
 
-            var orders = await _context.Orders
+            var orderDetails = await _context.OrderDetails
+                .Include(o => o.Product)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (orders == null)
+            if (orderDetails == null)
             {
                 return NotFound();
             }
 
-            return View(orders);
+            return View(orderDetails);
         }
 
-        // POST: Orders/Delete/5
+        // POST: OrderDetails1/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var orders = await _context.Orders.FindAsync(id);
-            _context.Orders.Remove(orders);
+            var orderDetails = await _context.OrderDetails.FindAsync(id);
+            _context.OrderDetails.Remove(orderDetails);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrdersExists(int id)
+        private bool OrderDetailsExists(int id)
         {
-            return _context.Orders.Any(e => e.OrderId == id);
+            return _context.OrderDetails.Any(e => e.OrderId == id);
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using System.Configuration;
 
+
 namespace ISAD251WebApp.Models
 {
     public partial class StoredContext : DbContext
@@ -58,11 +59,17 @@ namespace ISAD251WebApp.Models
                     .IsUnicode(false);
             });
             OnModelCreatingPartial(modelBuilder);
+
+
         }
 
 
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
+
+
+
+       
     } 
 }

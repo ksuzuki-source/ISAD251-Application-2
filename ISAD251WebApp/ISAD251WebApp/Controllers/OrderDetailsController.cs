@@ -28,8 +28,6 @@ namespace ISAD251WebApp.Controllers
             var storedContext = _context.OrderDetails.Include(o => o.Product);
             return View(await storedContext.ToListAsync());
 
-
-
         }
 
 

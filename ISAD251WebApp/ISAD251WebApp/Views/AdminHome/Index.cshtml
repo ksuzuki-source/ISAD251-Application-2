@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+
+    body, html {
+        height: 100%;
+        font-family: "Inconsolata", sans-serif;
+    }
+</style>
+<div class="text-left mt-5 px-5">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="display-4">Welcome</h1>
+            <p>
+                This is an application for Customer to Order in the cake cafe.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1"><a asp-controller="Products" asp-action="Index" class="btn btn-info">Manage Products</a></div>||
+        <div class="col-sm-1"><a asp-controller="OrderDetails" asp-action="Index" class="btn btn-info">View Orders</a></div>
+        <div class="col-sm-10"></div>
+    </div>
+
+</div>

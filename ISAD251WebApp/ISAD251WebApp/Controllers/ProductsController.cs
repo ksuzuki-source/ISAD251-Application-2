@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ISAD251WebApp.Models;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace ISAD251WebApp.Controllers
 {
@@ -21,11 +25,11 @@ namespace ISAD251WebApp.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
+           
             return View(await _context.Products.ToListAsync());
         }
-
-        // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+            // GET: Products/Details/5
+            public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {

@@ -10,6 +10,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace ISAD251WebApp.Controllers
 {
@@ -26,6 +27,17 @@ namespace ISAD251WebApp.Controllers
         public async Task<IActionResult> Index()
         {
             var storedContext = _context.OrderDetails.Include(o => o.Product);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:44362/api/");
+                client.DefaultRequestHeaders.Clear();
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+               
+                
+            }
+
             return View(await storedContext.ToListAsync());
 
         }

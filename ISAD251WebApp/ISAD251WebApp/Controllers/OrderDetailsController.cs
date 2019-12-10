@@ -31,11 +31,16 @@ namespace ISAD251WebApp.Controllers
             {
                 client.BaseAddress = new Uri("http://localhost:44362/api/");
                 client.DefaultRequestHeaders.Clear();
+
+
                 //Define request data format  
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+               // HttpResponseMessage response = await client.GetAsync("api/OrderDetails");
+                //if (response.IsSuccessStatusCode)
+                //{
+                    //OrderDetails orderDetails = await response.Content.ReadAsAsync<OrderDetails>();
+               // }
 
-               
-                
             }
 
             return View(await storedContext.ToListAsync());
@@ -45,6 +50,7 @@ namespace ISAD251WebApp.Controllers
 
 
         // GET: OrderDetails/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -55,6 +61,19 @@ namespace ISAD251WebApp.Controllers
             var orderDetails = await _context.OrderDetails
                 .Include(o => o.Product)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:44362/api/OrderDetails");
+                client.DefaultRequestHeaders.Clear();
+
+
+                //Define request data format  
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+
+            }
+
             if (orderDetails == null)
             {
                 return NotFound();
@@ -77,14 +96,20 @@ namespace ISAD251WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderId,ProductId,Quantity,Date")] OrderDetails orderDetails)
         {
-            if (ModelState.IsValid)
+
+            using (var client = new HttpClient())
             {
+                client.BaseAddress = new Uri("http://localhost:64189/api/OrderDetails");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                //HTTP POST
+
                 _context.Add(orderDetails);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new {id = orderDetails.OrderId });
+                return RedirectToAction("Details", new { id = orderDetails.OrderId });
+
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductDetails", orderDetails.ProductId);
-            return View(orderDetails);
         }
 
 
@@ -114,12 +139,20 @@ namespace ISAD251WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var orderDetails = await _context.OrderDetails.FindAsync(id);
-            _context.OrderDetails.Remove(orderDetails);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:64189/api/OrderDetails");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
+
+
+                var orderDetails = await _context.OrderDetails.FindAsync(id);
+                _context.OrderDetails.Remove(orderDetails);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+        }
         private bool OrderDetailsExists(int id)
         {
             return _context.OrderDetails.Any(e => e.OrderId == id);

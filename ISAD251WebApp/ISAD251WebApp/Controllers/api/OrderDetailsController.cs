@@ -21,7 +21,9 @@ namespace ISAD251WebApp.Controllers.api
         }
 
         // GET: api/OrderDetails
+        
         [HttpGet]
+        
         public async Task<ActionResult<IEnumerable<OrderDetails>>> GetOrderDetails()
         {
                
@@ -42,37 +44,7 @@ namespace ISAD251WebApp.Controllers.api
             return orderDetails;
         }
 
-        // PUT: api/OrderDetails/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderDetails(int id, OrderDetails orderDetails)
-        {
-            if (id != orderDetails.OrderId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(orderDetails).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderDetailsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+        
 
         // POST: api/OrderDetails
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
@@ -80,8 +52,13 @@ namespace ISAD251WebApp.Controllers.api
         [HttpPost]
         public async Task<ActionResult<OrderDetails>> PostOrderDetails(OrderDetails orderDetails)
         {
-            _context.OrderDetails.Add(orderDetails);
+            if (!ModelState.IsValid)
+                return BadRequest("Not a valid model");
+
+         
+                _context.OrderDetails.Add(orderDetails);
             await _context.SaveChangesAsync();
+
 
             return CreatedAtAction("GetOrderDetails", new { id = orderDetails.OrderId }, orderDetails);
         }

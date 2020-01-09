@@ -10,7 +10,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using System.Text;
-using Newtonsoft.Json;
+using System.Net.Http.Headers;
+
 
 namespace ISAD251WebApp.Controllers
 {
@@ -29,30 +30,27 @@ namespace ISAD251WebApp.Controllers
             var storedContext = _context.OrderDetails.Include(o => o.Product);
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:44362/api/");
-                client.DefaultRequestHeaders.Clear();
+                client.BaseAddress = new Uri("http://localhost:44362/api");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
 
-
-                //Define request data format  
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-               // HttpResponseMessage response = await client.GetAsync("api/OrderDetails");
-                //if (response.IsSuccessStatusCode)
-                //{
-                    //OrderDetails orderDetails = await response.Content.ReadAsAsync<OrderDetails>();
-               // }
-
+                var context = _context.OrderDetails.Include(o => o.Product);
+                return View(await storedContext.ToListAsync());
             }
-
-            return View(await storedContext.ToListAsync());
 
         }
 
 
 
+
+
         // GET: OrderDetails/Details/5
-        
+
         public async Task<IActionResult> Details(int? id)
         {
+
+
             if (id == null)
             {
                 return NotFound();
@@ -64,22 +62,19 @@ namespace ISAD251WebApp.Controllers
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:44362/api/OrderDetails");
-                client.DefaultRequestHeaders.Clear();
+                client.BaseAddress = new Uri("http://localhost:44362/api");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new
+                    System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
+                if (orderDetails == null)
+                {
+                    return NotFound();
+                }
 
-                //Define request data format  
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
+                return View(orderDetails);
 
             }
-
-            if (orderDetails == null)
-            {
-                return NotFound();
-            }
-
-            return View(orderDetails);
         }
 
         // GET: OrderDetails/Create
@@ -99,19 +94,19 @@ namespace ISAD251WebApp.Controllers
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:64189/api/OrderDetails");
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                client.BaseAddress = new Uri("http://localhost:44362/api");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new
+                    System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                //HTTP POST
+
+
 
                 _context.Add(orderDetails);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", new { id = orderDetails.OrderId });
-
             }
-        }
-
+            }
 
 
 
@@ -141,21 +136,20 @@ namespace ISAD251WebApp.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:64189/api/OrderDetails");
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                client.BaseAddress = new Uri("http://localhost:44962/api");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new
+                    System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
+                {
+                    var orderDetails = await _context.OrderDetails.FindAsync(id);
+                    _context.OrderDetails.Remove(orderDetails);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
 
-
-                var orderDetails = await _context.OrderDetails.FindAsync(id);
-                _context.OrderDetails.Remove(orderDetails);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-        }
-        private bool OrderDetailsExists(int id)
-        {
-            return _context.OrderDetails.Any(e => e.OrderId == id);
+
         }
     }
 }

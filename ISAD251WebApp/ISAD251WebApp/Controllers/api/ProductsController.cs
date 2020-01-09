@@ -26,6 +26,8 @@ namespace ISAD251WebApp.Controllers.api
         {
             return await _context.Products.ToListAsync();
         }
+    
+
 
         // GET: api/Products/5
         [HttpGet("{id}")]

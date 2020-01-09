@@ -21,13 +21,29 @@ namespace ISAD251WebApp.Controllers.api
         }
 
         // GET: api/OrderDetails
-        
+
         [HttpGet]
-        
+
         public async Task<ActionResult<IEnumerable<OrderDetails>>> GetOrderDetails()
         {
-               
+
+            IList<OrderDetails> orders = null;
+
+            using (var ctx = new StoredContext())
+            {
+                orders = ctx.OrderDetails.Select(o => new OrderDetails()
+                {
+                    OrderId = o.OrderId,
+                    ProductId = o.ProductId,
+                    Quantity = o.Quantity,
+                    Date = o.Date,
+                    Product = o.Product
+
+                }).ToList<OrderDetails>();
+
                 return await _context.OrderDetails.ToListAsync();
+
+            }
         }
 
         // GET: api/OrderDetails/5
@@ -58,6 +74,7 @@ namespace ISAD251WebApp.Controllers.api
          
                 _context.OrderDetails.Add(orderDetails);
             await _context.SaveChangesAsync();
+
 
 
             return CreatedAtAction("GetOrderDetails", new { id = orderDetails.OrderId }, orderDetails);

@@ -29,7 +29,7 @@ namespace ISAD251WebApp.Controllers
             //IEnumerable<Products> products = null;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:44362/api/");
+                client.BaseAddress = new Uri("http://cent-5-534.uopnet.plymouth.ac.uk/ISAD251/ksuzuki/api/Products");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));

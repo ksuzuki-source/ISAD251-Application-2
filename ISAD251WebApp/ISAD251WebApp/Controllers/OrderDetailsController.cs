@@ -30,7 +30,7 @@ namespace ISAD251WebApp.Controllers
             var storedContext = _context.OrderDetails.Include(o => o.Product);
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:44362/api");
+                client.BaseAddress = new Uri("http://cent-5-534.uopnet.plymouth.ac.uk/ISAD251/ksuzuki/api/OrderDetails");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
@@ -62,7 +62,7 @@ namespace ISAD251WebApp.Controllers
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:44362/api");
+                client.BaseAddress = new Uri("http://cent-5-534.uopnet.plymouth.ac.uk/ISAD251/ksuzuki/api/OrderDetails");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new
                     System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
@@ -94,7 +94,7 @@ namespace ISAD251WebApp.Controllers
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:44362/api");
+                client.BaseAddress = new Uri("http://cent-5-534.uopnet.plymouth.ac.uk/ISAD251/ksuzuki/api/OrderDetails");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new
                     System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
@@ -136,7 +136,7 @@ namespace ISAD251WebApp.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:44962/api");
+                client.BaseAddress = new Uri("http://cent-5-534.uopnet.plymouth.ac.uk/ISAD251/ksuzuki/api/OrderDetails");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new
                     System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
